@@ -5,6 +5,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -50,12 +52,14 @@ public class Test2 {
     }
 
     @BeforeTest
-    public void setupAndLogin() {
+    public void setup() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
         driver = new ChromeDriver(options);
-
+    }
+    @BeforeMethod
+    public void login() {
         driver.get(url);
         login("standard_user","secret_sauce");
     }
@@ -69,14 +73,16 @@ public class Test2 {
         /*WebElement loginPageHeader = driver.findElement(By.className("login_logo"));
         Assert.assertEquals(loginPageHeader.getText(),"Swag Labs1","login page header is not Swag Labs1");*/
         // driver.quit();
-
     }
 
     @Test
     public void test2() {
         List<WebElement> Items = driver.findElements(By.className("inventory_item")); //did not work with "inventory_item_name " , why?
         Assert.assertEquals(Items.size(), 6, "The number of inventory items is not 6");
+    }
 
-
+    @AfterTest
+    public void quit() {
+        this.driver.quit();
     }
 }
